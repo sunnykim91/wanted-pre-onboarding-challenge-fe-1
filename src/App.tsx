@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import RootRouter from './RootRouter';
 import { Typography } from '@mui/material';
 
 function App() {
+  useEffect(() => {
+    // window.location.replace('/login');
+  }, []);
+
   return (
     <>
       <Typography
