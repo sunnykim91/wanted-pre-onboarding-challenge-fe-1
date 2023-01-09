@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/api';
+import TodoSnackbar from '../component/TodoSnackbar';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -105,19 +106,12 @@ function LoginPage() {
           회원가입
         </Button>
       </Grid>
-      <Snackbar
-        open={isSnackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setIsSnackbarOpen(false)}
-      >
-        <Alert
-          onClose={() => setIsSnackbarOpen(false)}
-          severity={severity}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMsg}
-        </Alert>
-      </Snackbar>
+      <TodoSnackbar
+        isSnackbarOpen={isSnackbarOpen}
+        setIsSnackbarOpen={setIsSnackbarOpen}
+        severity={severity}
+        snackbarMsg={snackbarMsg}
+      />
     </Grid>
   );
 }
