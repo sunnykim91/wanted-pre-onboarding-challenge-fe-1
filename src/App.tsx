@@ -1,25 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './App.css';
-import RootRouter from './RootRouter';
-import { Typography } from '@mui/material';
-
+import RootRouter from './Router/RootRouter';
 function App() {
-  useEffect(() => {
-    // window.location.replace('/login');
-  }, []);
-
-  return (
-    <>
-      <Typography
-        textAlign={'center'}
-        variant="h2"
-        style={{ marginBottom: '20px' }}
-      >
-        Wanted 프론트엔드 사전과제
-      </Typography>
-      <RootRouter />
-    </>
-  );
+  return <RootRouter />;
 }
 
 export default App;

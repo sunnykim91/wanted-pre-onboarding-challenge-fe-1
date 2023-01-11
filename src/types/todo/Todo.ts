@@ -1,5 +1,5 @@
 export interface Todo {
-  id: string;
+  readonly id: string;
   title: string;
   content: string;
 }

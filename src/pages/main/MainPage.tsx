@@ -10,9 +10,9 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/api';
-import { Todo } from '../../model/Todo';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { Todo } from '../../types/todo/Todo';
 
 function MainPage() {
   const navigate = useNavigate();
@@ -102,6 +102,10 @@ function MainPage() {
   useEffect(() => {
     fetchTodo();
   }, []);
+
+  //웹 접근성 측면
+
+  // 삭제 수정시 모달창
 
   return (
     <Grid container justifyContent={'space-around'} gap={5} padding={2}>
