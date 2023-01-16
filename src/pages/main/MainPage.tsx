@@ -10,34 +10,50 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/api';
-import { Todo } from '../../model/Todo';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { Todo } from '../../types/todo/Todo';
+import {
+  setCurrentTodo,
+  setInputContent,
+  setInputTitle,
+} from '../../store/slice/todoSlice';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import {
+  createTodoFromServer,
+  deleteTodoFromServer,
+  fetchTodoFromServer,
+  updateTodoFromServer,
+} from '../../store/thunk/todoThunk';
 
 function MainPage() {
   const navigate = useNavigate();
-  const [todoList, setTodoList] = React.useState<Todo[]>([]);
-  const [currentTodo, setCurrentTodo] = React.useState<Todo>({
-    id: '',
-    content: '',
-    title: '',
-  });
-  const [inputTitle, setInputTitle] = React.useState<string>('');
-  const [inputContent, setInputContent] = React.useState<string>('');
-  const [isAddMode, setIsAddMode] = React.useState<boolean>(false);
-  const [isModifyMode, setIsModifyMode] = React.useState<boolean>(false);
+  const [isAddMode, setIsAddMode] = React.useState(false);
+  const [isModifyMode, setIsModifyMode] = React.useState(false);
+
+  const { inputContent, inputTitle, todos, currentTodo } = useAppSelector(
+    state => state.todosSlice,
+  );
+  const dispatch = useAppDispatch();
 
   const handleClickAddTodoSubmitBtn = async () => {
+    fetchTodo();
     try {
       if (isModifyMode) {
-        await api.updateTodo(currentTodo.id, inputTitle, inputContent);
+        dispatch(
+          updateTodoFromServer({
+            id: currentTodo.id,
+            title: inputTitle,
+            content: inputContent,
+          }),
+        );
       } else {
-        await api.createTodo(inputTitle, inputContent);
+        dispatch(
+          createTodoFromServer({ title: inputTitle, content: inputContent }),
+        );
       }
-
       fetchTodo();
-      setInputTitle('');
-      setInputContent('');
     } catch (err: any) {
       if (err.message === 'token expired') {
         navigate('/login');
@@ -46,34 +62,33 @@ function MainPage() {
   };
 
   const handleClickAddTodoButton = async () => {
-    setInputTitle('');
-    setInputContent('');
     setIsAddMode(true);
     setIsModifyMode(false);
   };
 
   const fetchTodo = async () => {
-    try {
-      const res = await api.getTodos();
-      setTodoList(res.data.data);
-    } catch (err: any) {
-      if (err.message === 'token expired') {
-        navigate('/login');
-      }
-    }
+    dispatch(fetchTodoFromServer());
   };
 
   const handleChangeInputTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputTitle(e.target.value);
+    dispatch(
+      setInputTitle({
+        input: e.target.value,
+      }),
+    );
   };
 
   const handleChangeInputContent = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputContent(e.target.value);
+    dispatch(
+      setInputContent({
+        input: e.target.value,
+      }),
+    );
   };
 
   const handleClickDeleteIcon = async (id: string) => {
     try {
-      await api.deleteTodo(id);
+      dispatch(deleteTodoFromServer({ id }));
       fetchTodo();
     } catch (err: any) {
       if (err.message === 'token expired') {
@@ -85,9 +100,17 @@ function MainPage() {
   const handleClickUpdateIcon = (todo: Todo) => {
     setIsModifyMode(true);
     setIsAddMode(false);
-    setCurrentTodo(todo);
-    setInputTitle(todo.title);
-    setInputContent(todo.content);
+    dispatch(setCurrentTodo({ todo }));
+    dispatch(
+      setInputTitle({
+        input: todo.title,
+      }),
+    );
+    dispatch(
+      setInputContent({
+        input: todo.content,
+      }),
+    );
   };
 
   const handleClickCancelButton = () => {
@@ -112,7 +135,7 @@ function MainPage() {
             추가하기
           </Button>
         </Grid>
-        {todoList.map((todo: Todo) => {
+        {todos.map((todo: Todo) => {
           return (
             <ListItem key={todo.id}>
               <Grid container justifyContent={'flex-start'} gap={3}>

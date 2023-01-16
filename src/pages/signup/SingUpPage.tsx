@@ -1,15 +1,10 @@
 import React from 'react';
-import {
-  Grid,
-  Typography,
-  Input,
-  Button,
-  Snackbar,
-  Alert,
-} from '@mui/material';
+import { Grid, Typography, Input, Button, Paper, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/api';
 import TodoSnackbar from '../component/TodoSnackbar';
+import BlueStyledButton from '../../components/common/BlueStyledButton';
+import PinkStyledButton from '../../components/common/PinkStyledButton';
 
 function SingUpPage() {
   const navigate = useNavigate();
@@ -73,48 +68,50 @@ function SingUpPage() {
   };
 
   return (
-    <Grid container justifyContent={'center'} gap={3}>
-      <Grid container justifyContent={'center'} gap={2}>
-        <Typography variant="h6">이메일</Typography>
-        <Input value={email} onChange={handleChangeInputEmail} />
-        <Grid container justifyContent={'center'}>
-          {isEmailValidCheck ? (
-            <Typography style={{ fontSize: '0.8em', color: 'red' }}>
-              *이메일 형식에 맞지 않습니다.
-            </Typography>
-          ) : (
-            <></>
-          )}
+    <Paper sx={{ width: '25%', padding: '20px', background: '#FFF6BD' }}>
+      <Grid container justifyContent={'center'} gap={3}>
+        <Typography variant="h4">회원가입</Typography>
+        <Grid container justifyContent={'center'} gap={2}>
+          <Typography variant="h6">이메일</Typography>
+          <Input value={email} onChange={handleChangeInputEmail} />
+          <Grid container justifyContent={'center'}>
+            {isEmailValidCheck ? (
+              <Typography style={{ fontSize: '0.8em', color: 'red' }}>
+                *이메일 형식에 맞지 않습니다.
+              </Typography>
+            ) : (
+              <></>
+            )}
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid container justifyContent={'center'} gap={2}>
-        <Typography variant="h6">비밀번호</Typography>
-        <Input value={password} onChange={handleChangeInputPassword} />
-        <Grid container justifyContent={'center'}>
-          {isPwValidCheck ? (
-            <Typography style={{ fontSize: '0.8em', color: 'red' }}>
-              *비밀번호 형식에 맞지 않습니다.(영문,숫자 8자 이상)
-            </Typography>
-          ) : (
-            <></>
-          )}
+        <Grid container justifyContent={'center'} gap={2}>
+          <Typography variant="h6">비밀번호</Typography>
+          <Input value={password} onChange={handleChangeInputPassword} />
+          <Grid container justifyContent={'center'}>
+            {isPwValidCheck ? (
+              <Typography style={{ fontSize: '0.8em', color: 'red' }}>
+                *비밀번호 형식에 맞지 않습니다.(영문,숫자 8자 이상)
+              </Typography>
+            ) : (
+              <></>
+            )}
+          </Grid>
         </Grid>
+        <Grid container justifyContent={'center'} gap={2}>
+          <PinkStyledButton text="취소" onClickEvent={handleClickCancelBtn} />
+          <BlueStyledButton
+            text="회원가입"
+            onClickEvent={handleClickSignUpBtn}
+          />
+        </Grid>
+        <TodoSnackbar
+          isSnackbarOpen={isSnackbarOpen}
+          setIsSnackbarOpen={setIsSnackbarOpen}
+          severity={severity}
+          snackbarMsg={snackbarMsg}
+        />
       </Grid>
-      <Grid container justifyContent={'center'} gap={2}>
-        <Button onClick={handleClickCancelBtn} variant="outlined">
-          취소
-        </Button>
-        <Button onClick={handleClickSignUpBtn} variant="contained">
-          회원가입
-        </Button>
-      </Grid>
-      <TodoSnackbar
-        isSnackbarOpen={isSnackbarOpen}
-        setIsSnackbarOpen={setIsSnackbarOpen}
-        severity={severity}
-        snackbarMsg={snackbarMsg}
-      />
-    </Grid>
+    </Paper>
   );
 }
 
