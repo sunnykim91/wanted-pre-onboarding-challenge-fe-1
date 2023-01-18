@@ -7,3 +7,7 @@ export interface SetCurrentTodoAction {
 export interface SetInputAction {
   input: string;
 }
+
+export interface SetFlagAction {
+  flag: boolean;
+}

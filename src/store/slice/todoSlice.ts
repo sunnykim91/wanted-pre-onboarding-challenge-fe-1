@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   SetInputAction,
   SetCurrentTodoAction,
+  SetFlagAction,
 } from '../../types/todo/ActionTypes';
 import { TodoStateType } from '../../types/todo/TodoStateType';
 import { fetchTodoFromServer } from '../thunk/todoThunk';
@@ -16,6 +17,7 @@ const initialState: TodoStateType = {
     title: '',
   },
   todos: [],
+  isModifyMode: false,
 };
 
 const todoSlice = createSlice({
@@ -37,6 +39,12 @@ const todoSlice = createSlice({
     ) {
       state.inputContent = action.payload.input;
     },
+    setIsModifyMode(
+      state: TodoStateType,
+      action: PayloadAction<SetFlagAction>,
+    ) {
+      state.isModifyMode = action.payload.flag;
+    },
   },
   extraReducers: builder => {
     builder.addCase(fetchTodoFromServer.pending, state => {
@@ -49,7 +57,11 @@ const todoSlice = createSlice({
   },
 });
 
-export const { setInputTitle, setInputContent, setCurrentTodo } =
-  todoSlice.actions;
+export const {
+  setInputTitle,
+  setInputContent,
+  setCurrentTodo,
+  setIsModifyMode,
+} = todoSlice.actions;
 
 export default todoSlice.reducer;

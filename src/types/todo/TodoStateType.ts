@@ -6,4 +6,5 @@ export type TodoStateType = {
   loading: boolean;
   currentTodo: Todo;
   todos: Todo[];
+  isModifyMode: boolean;
 };
